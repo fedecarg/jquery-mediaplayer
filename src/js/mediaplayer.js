@@ -1,4 +1,4 @@
-/*global window, define */
+/*global require, define */
 
 require.config({
     paths: {
