@@ -5,7 +5,7 @@ require.config({
         "jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
         "jquery-mediaelement": "//www.mediaelementjs.com/2.11.0/mediaelementjs.min.js"
     }
- });
+});
 
 /**
  * MediaPlayer module
@@ -16,14 +16,13 @@ require.config({
  * @version 1.0
  * @author Federico Cargnelutit
  */
- define([
-        'jquery', 
-        'jquery-mediaelement'
-], function ($, mediaElement) {
-    
+define([
+    'jquery',
+    'jquery-mediaelement'], function ($, mediaElement) {
+
     var MediaPlayer = {
 
-        DEFAULTS = {
+        defaults: {
             // if the <video width> is not specified, this is the default
             defaultVideoWidth: 480,
             // if the <video height> is not specified, this is the default
@@ -43,7 +42,7 @@ require.config({
             // enables Flash and Silverlight to resize to content size
             enableAutosize: true,
             // the order of controls you want on the control bar (and other plugins below)
-            features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
+            features: ['playpause', 'progress', 'current', 'duration', 'tracks', 'volume', 'fullscreen'],
             // Hide controls when playing and mouse is not over the video
             alwaysShowControls: false,
             // force iPad's native controls
@@ -66,71 +65,36 @@ require.config({
             keyActions: []
         },
 
-        HTML_ENTITIES = {
-            '&': '&amp;',
-            '>': '&gt;',
-            '<': '&lt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        },
-
         /**
-         * Convert <video> tag to MediaElement. If your users have JavaScript and Flash, this is 
-         * the easist route for all browsers and mobile devices (the drawback is that h.264 is not 
-         * fully open and only works in IE9 and Safari under HTML5). 
+         * Convert <video> tag to MediaElement. If your users have JavaScript and Flash, this is
+         * the easist route for all browsers and mobile devices (the drawback is that h.264 is not
+         * fully open and only works in IE9 and Safari under HTML5).
          *
-         * @method initVideoPlayer 
+         * @method init
          * @since 1.0
          * @param {Object} options Player Options
          */
-        initialize: function(elementId, options) {
-            var that = this;
-            var events = {
-                // method that fires when the Flash or Silverlight object is ready
-                success: function(mediaElement, domObject) {
-                    // add event listener
-                    mediaElement.addEventListener('timeupdate', function(e) {
-                        $('#' + elementId + '-current-time').html(mediaElement.currentTime);
-                    }, false);
-                    // call the play method
-                    mediaElement.play();
-                },
-                // fires when a problem is detected
-                error: function() {
-                    // log
-                }
+        init: function (elementId, options) {
+
+            options = $.extend({}, this.defaults, options);
+
+            // method that fires when the Flash or Silverlight object is ready    
+            options.success = function (mediaElement, domObject) {
+                // add event listener
+                mediaElement.addEventListener('timeupdate', function (e) {
+                    $('#' + elementId + '-current-time').html(mediaElement.currentTime);
+                }, false);
+                
+                // call the play method
+                mediaElement.play();
             };
 
-            $('#' + elementId).mediaelementplayer(extend(options, events));
-        },
+            // fires when a problem is detected
+            options.error = function () {
+                // log
+            };
 
-        /**
-         * Merges the defaults and options objects together without modifying the defaults object.
-         *
-         * @method extend
-         * @since 1.0
-         * @param {Object} target An object that will receive the new properties.
-         * @param {Object} obj An object containing additional properties to merge
-         * @return {Object} Returns the merged object
-         */
-        extend: function(target, obj) {
-            return $.extend({}, obj, target);
-        },
-
-        /**
-         * HTML escaping
-         *
-         * @method htmlEscape
-         * @since 1.0
-         * @param {String} html String to escape
-         * @return {String}
-         */
-        htmlEscape: function(html) {
-            return html && html.replace(/[&"'><]/g, function(character) {
-                return HTML_ENTITIES[character];
-            });
-
-            // return $.text(html);
+            $('#' + elementId).mediaelementplayer(options);
         },
 
         /**
@@ -141,7 +105,7 @@ require.config({
          * @param {String} element DOM element
          * @return {Boolean} Returns true if the element has been found in the page
          */
-        hasElement: function(element) {
+        hasElement: function (element) {
             return $(element).length > 0 ? true : false;
         },
 
@@ -150,7 +114,7 @@ require.config({
          * @since 1.0
          * @param {String} cssText
          */
-        addCss: function(cssText) {
+        addCss: function (cssText) {
             var head = document.getElementsByTagName('head')[0];
             var style = document.createElement('style');
             style.type = 'text/css';
@@ -164,9 +128,9 @@ require.config({
             // $('<style type="text/css">' + cssText + '</style>' ).appendTo('head');
             head.appendChild(style);
         }
-        
+
     }; // MediaPlayer
-        
+
     return MediaPlayer;
-        
+
 }); // define
