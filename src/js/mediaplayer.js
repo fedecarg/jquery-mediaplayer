@@ -16,9 +16,7 @@ require.config({
  * @version 1.0
  * @author Federico Cargnelutit
  */
-define([
-    'jquery',
-    'jquery-mediaelement'], function ($, mediaElement) {
+define(['jquery','jquery-mediaelement'], function ($, mediaElement) {
 
     var MediaPlayer = {
 
