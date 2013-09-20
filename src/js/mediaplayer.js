@@ -18,6 +18,8 @@ require.config({
  */
 define(['jquery','jquery-mediaelement'], function ($, mediaElement) {
 
+    "use strict";
+
     var MediaPlayer = {
 
         defaults: {
